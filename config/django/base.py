@@ -17,7 +17,11 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "collection_project.common.apps.CommonConfig",
+    "collection_project.users.apps.UsersConfig",
+    "collection_project.api.apps.ApiConfig",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -117,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTH_USER_MODEL = "users.BaseUser"
+AUTH_USER_MODEL = "users.BaseUser"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
