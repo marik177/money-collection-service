@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager as BUM
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from collection_project.common.models import BaseModel
 
@@ -52,6 +53,9 @@ class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         max_length=255,
         unique=True,
     )
+
+    first_name = models.CharField(_("first name"), max_length=150, blank=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
