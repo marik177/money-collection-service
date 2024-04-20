@@ -7,7 +7,8 @@ from collection_project.api.pagination import (
     get_paginated_response,
 )
 from collection_project.users.models import BaseUser
-from collection_project.users.services import user_create, user_list
+from collection_project.users.selectors import get_user, user_get_login_data, user_list
+from collection_project.users.services import user_create
 
 
 # TODO: When JWT is resolved, add authenticated version
@@ -51,3 +52,9 @@ class UserCreateApi(APIView):
         serializer.is_valid(raise_exception=True)
         user_create(**serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)
+
+
+class UserDetailApi(APIView):
+    def get(self, request, user_id):
+        user = get_user(user_id=user_id)
+        return Response(user_get_login_data(user=user))

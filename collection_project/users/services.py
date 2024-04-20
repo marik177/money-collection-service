@@ -1,10 +1,8 @@
 from typing import Optional
 
 from django.db import transaction
-from django.db.models.query import QuerySet
 
 from collection_project.common.services import model_update
-from collection_project.users.filters import BaseUserFilter
 from collection_project.users.models import BaseUser
 
 
@@ -32,9 +30,3 @@ def user_update(*, user: BaseUser, data) -> BaseUser:
     # ... some additional tasks with the user ...
 
     return user
-
-
-def user_list(*, filters=None) -> QuerySet[BaseUser]:
-    filters = filters or {}
-    qs = BaseUser.objects.all()
-    return BaseUserFilter(filters, queryset=qs).qs
