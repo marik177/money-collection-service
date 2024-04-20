@@ -4,6 +4,7 @@ from django.db import transaction
 from django.db.models.query import QuerySet
 
 from collection_project.common.services import model_update
+from collection_project.users.filters import BaseUserFilter
 from collection_project.users.models import BaseUser
 
 
@@ -33,6 +34,7 @@ def user_update(*, user: BaseUser, data) -> BaseUser:
     return user
 
 
-def user_list() -> QuerySet[BaseUser]:
+def user_list(*, filters=None) -> QuerySet[BaseUser]:
+    filters = filters or {}
     qs = BaseUser.objects.all()
-    return qs
+    return BaseUserFilter(filters, queryset=qs).qs

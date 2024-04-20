@@ -12,6 +12,10 @@ from collection_project.users.services import user_create, user_list
 
 # TODO: When JWT is resolved, add authenticated version
 class UserListApi(APIView):
+    class FilterSerializer(serializers.Serializer):
+        id = serializers.IntegerField(required=False)
+        email = serializers.EmailField(required=False)
+
     class Pagination(LimitOffsetPagination):
         default_limit = 1
 
@@ -21,7 +25,12 @@ class UserListApi(APIView):
             fields = ("id", "email", "is_admin")
 
     def get(self, request):
-        users = user_list()
+        # Make sure the filters are valid, if passed
+        filters_serializer = self.FilterSerializer(data=request.query_params)
+        filters_serializer.is_valid(raise_exception=True)
+
+        users = user_list(filters=filters_serializer.validated_data)
+
         return get_paginated_response(
             pagination_class=self.Pagination,
             serializer_class=self.OutputSerializer,
