@@ -21,6 +21,7 @@ LOCAL_APPS = [
     "collection_project.common.apps.CommonConfig",
     "collection_project.users.apps.UsersConfig",
     "collection_project.api.apps.ApiConfig",
+    "collection_project.core.apps.CoreConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -144,8 +145,7 @@ STATIC_URL = "/static/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "styleguide_example.api.exception_handlers.drf_default_with_modifications_exception_handler",
-    # 'EXCEPTION_HANDLER': 'styleguide_example.api.exception_handlers.hacksoft_proposed_exception_handler',
+    "EXCEPTION_HANDLER": "collection_project.api.exception_handlers.drf_default_with_modifications_exception_handler",
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
     "DEFAULT_AUTHENTICATION_CLASSES": [],
 }
