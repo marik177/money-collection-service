@@ -46,7 +46,7 @@ class UserCreateApi(APIView):
     class InputSerializer(serializers.ModelSerializer):
         class Meta:
             model = BaseUser
-            fields = ("email", "first_name", "last_name")
+            fields = ("email", "password", "first_name", "last_name")
 
     def post(self, request) -> Response:
         serializer = self.InputSerializer(data=request.data)
@@ -55,17 +55,18 @@ class UserCreateApi(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class UserDetailApi(APIView):
+class UserDetailApi(ApiAuthMixin, APIView):
     def get(self, request, user_id) -> Response:
         user = get_user(user_id=user_id)
         return Response(user_get_login_data(user=user))
 
 
-class UserUpdateApi(APIView):
+class UserUpdateApi(ApiAuthMixin, APIView):
     class InputSerializer(serializers.Serializer):
         email = serializers.EmailField(required=False)
         first_name = serializers.CharField(required=False)
         last_name = serializers.CharField(required=False)
+        password = serializers.CharField(required=False)
 
     def post(self, request, user_id) -> Response:
         user = get_user(user_id=user_id)

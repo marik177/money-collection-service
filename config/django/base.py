@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_extensions",
     "rest_framework_jwt",
+    "debug_toolbar",
 ]
 
 INSTALLED_APPS = [
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -156,3 +158,8 @@ APP_DOMAIN = env("APP_DOMAIN", default="http://localhost:8000")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 from config.settings.jwt import *  # noqa
+from config.settings.cors import *  # noqa
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
