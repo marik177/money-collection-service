@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 from django.db import models
 
-from collection_project.users.models import BaseUser
+from collection_project.users.models import BaseModel, BaseUser
 
 
-class Occasion(models.Model):
+class Occasion(BaseModel):
     """Occasion model"""
 
     name = models.CharField(max_length=255, unique=True)
@@ -15,7 +15,7 @@ class Occasion(models.Model):
         return f"{self.name}"
 
 
-class Collection(models.Model):
+class Collection(BaseModel):
     """Group money collections"""
 
     author = models.ForeignKey(BaseUser, related_name="author", on_delete=models.CASCADE)
@@ -30,7 +30,7 @@ class Collection(models.Model):
         return self.title
 
 
-class Payment(models.Model):
+class Payment(BaseModel):
     """Individual payment"""
 
     collection = models.ForeignKey(Collection, related_name="payments", on_delete=models.CASCADE)
