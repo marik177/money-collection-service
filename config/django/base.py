@@ -22,6 +22,7 @@ LOCAL_APPS = [
     "collection_project.users.apps.UsersConfig",
     "collection_project.api.apps.ApiConfig",
     "collection_project.core.apps.CoreConfig",
+    "collection_project.authentication.apps.AuthenticationConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -153,3 +154,5 @@ REST_FRAMEWORK = {
 APP_DOMAIN = env("APP_DOMAIN", default="http://localhost:8000")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+from config.settings.jwt import *  # noqa

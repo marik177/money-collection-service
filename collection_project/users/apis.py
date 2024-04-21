@@ -2,6 +2,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from collection_project.api.mixins import ApiAuthMixin
 from collection_project.api.pagination import (
     LimitOffsetPagination,
     get_paginated_response,
@@ -12,7 +13,7 @@ from collection_project.users.services import user_create, user_update
 
 
 # TODO: When JWT is resolved, add authenticated version
-class UserListApi(APIView):
+class UserListApi(ApiAuthMixin, APIView):
     class FilterSerializer(serializers.Serializer):
         id = serializers.IntegerField(required=False)
         email = serializers.EmailField(required=False)
@@ -25,7 +26,7 @@ class UserListApi(APIView):
             model = BaseUser
             fields = ("id", "email")
 
-    def get(self, request):
+    def get(self, request) -> Response:
         # Make sure the filters are valid, if passed
         filters_serializer = self.FilterSerializer(data=request.query_params)
         filters_serializer.is_valid(raise_exception=True)
@@ -47,7 +48,7 @@ class UserCreateApi(APIView):
             model = BaseUser
             fields = ("email", "first_name", "last_name")
 
-    def post(self, request):
+    def post(self, request) -> Response:
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_create(**serializer.validated_data)
@@ -55,7 +56,7 @@ class UserCreateApi(APIView):
 
 
 class UserDetailApi(APIView):
-    def get(self, request, user_id):
+    def get(self, request, user_id) -> Response:
         user = get_user(user_id=user_id)
         return Response(user_get_login_data(user=user))
 
@@ -66,7 +67,7 @@ class UserUpdateApi(APIView):
         first_name = serializers.CharField(required=False)
         last_name = serializers.CharField(required=False)
 
-    def post(self, request, user_id):
+    def post(self, request, user_id) -> Response:
         user = get_user(user_id=user_id)
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
