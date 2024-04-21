@@ -12,7 +12,6 @@ from collection_project.users.selectors import get_user, user_get_login_data, us
 from collection_project.users.services import user_create, user_update
 
 
-# TODO: When JWT is resolved, add authenticated version
 class UserListApi(ApiAuthMixin, APIView):
     class FilterSerializer(serializers.Serializer):
         id = serializers.IntegerField(required=False)

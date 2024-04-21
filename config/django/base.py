@@ -23,7 +23,7 @@ LOCAL_APPS = [
     "collection_project.api.apps.ApiConfig",
     "collection_project.core.apps.CoreConfig",
     "collection_project.authentication.apps.AuthenticationConfig",
-    "collection_project.money_collections.MoneyCollectionsConfig",
+    "collection_project.money_collections.apps.MoneyCollectionsConfig",
 ]
 
 THIRD_PARTY_APPS = [
