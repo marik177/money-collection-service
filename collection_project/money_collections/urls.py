@@ -1,6 +1,7 @@
 from django.urls import include, path
 
 from collection_project.money_collections.apis.collections import (
+    CollectionDetailApi,
     CollectionListApi,
 )
 from collection_project.money_collections.apis.occasions import (
@@ -21,6 +22,10 @@ occasions_urlpatterns = [
 
 collections_urlpatterns = [
     path("", CollectionListApi.as_view(), name="list"),
+    # path("create/", CollectionCreateApi.as_view(), name="create"),
+    path("<int:collection_id>/", CollectionDetailApi.as_view(), name="detail"),
+    # path("<int:collection_id>/update/", CollectionUpdateApi.as_view(), name="update"),
+    # path("<int:collection_id>/delete/", CollectionDeleteApi.as_view(), name="delete"),
 ]
 
 urlpatterns = [
