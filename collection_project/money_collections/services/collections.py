@@ -44,7 +44,7 @@ def collection_update(*, collection: Collection, data) -> Collection:
     return collection
 
 
-def collection_delete(*, collection: Collection):
+def collection_delete(*, collection: Collection) -> Collection:
     """Delete a collection"""
     collection.delete()
     return collection

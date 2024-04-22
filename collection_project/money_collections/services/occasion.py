@@ -17,6 +17,6 @@ def occasion_update(*, occasion: Occasion, data) -> Occasion:
     return occasion
 
 
-def occasion_delete(*, occasion: Occasion):
+def occasion_delete(*, occasion: Occasion) -> Occasion:
     occasion.delete()
     return occasion
