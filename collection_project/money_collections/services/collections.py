@@ -2,6 +2,7 @@ import sys
 from datetime import datetime, timedelta
 
 from django.db import transaction
+from django.db.models import Sum
 
 from collection_project.common.services import model_update
 from collection_project.money_collections.models import (
@@ -48,3 +49,11 @@ def collection_delete(*, collection: Collection) -> Collection:
     """Delete a collection"""
     collection.delete()
     return collection
+
+
+def get_contributors_number(collection: Collection) -> int:
+    return len(set(collection.payments.values_list("contributor_id", flat=True)))
+
+
+def get_collected_amount(collection: Collection) -> int:
+    return collection.payments.aggregate(full_amount=Sum("amount"))["full_amount"] or 0

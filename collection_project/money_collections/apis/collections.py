@@ -19,6 +19,8 @@ from collection_project.money_collections.services.collections import (
     collection_create,
     collection_delete,
     collection_update,
+    get_collected_amount,
+    get_contributors_number,
 )
 
 
@@ -57,6 +59,8 @@ class CollectionDetailApi(APIView):
     class OutputSerializer(serializers.ModelSerializer):
         author = serializers.ReadOnlyField(source="author.email")
         occasion = serializers.ReadOnlyField(source="occasion.name")
+        contributors = serializers.SerializerMethodField()
+        collected_amount = serializers.SerializerMethodField()
 
         class Meta:
             model = Collection
@@ -67,9 +71,17 @@ class CollectionDetailApi(APIView):
                 "occasion",
                 "description",
                 "planned_amount",
+                "collected_amount",
+                "contributors",
                 "cover_image",
                 "end_collection_date",
             )
+
+        def get_contributors(self, obj: Collection) -> int:
+            return get_contributors_number(collection=obj)
+
+        def get_collected_amount(self, obj: Collection) -> int:
+            return get_collected_amount(collection=obj)
 
     def get(self, request, collection_id) -> Response:
         collection = collection_get(collection_id)
