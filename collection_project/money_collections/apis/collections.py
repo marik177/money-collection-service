@@ -86,13 +86,12 @@ class CollectionCreateApi(APIView):
                 "occasion",
                 "description",
                 "planned_amount",
-                # "cover_image",
+                "cover_image",
                 "end_collection_date",
             )
 
     def post(self, request) -> Response:
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
         collection_create(**serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)

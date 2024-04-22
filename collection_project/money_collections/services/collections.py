@@ -16,7 +16,7 @@ def collection_create(
     occasion: int,
     description: str,
     planned_amount: int = sys.maxsize,
-    # cover_image: str,
+    cover_image: str,
     end_collection_date: datetime = datetime.utcnow() + timedelta(days=7),
 ) -> Collection:
     """Create a collection"""
@@ -31,7 +31,7 @@ def collection_create(
         occasion=occasion,
         description=description,
         planned_amount=planned_amount,
-        # cover_image=cover_image,
+        cover_image=cover_image,
         end_collection_date=end_collection_date,
     )
     return collection
