@@ -1,5 +1,8 @@
 from django.urls import include, path
 
+from collection_project.money_collections.apis.collections import (
+    CollectionListApi,
+)
 from collection_project.money_collections.apis.occasions import (
     OccasionCreateApi,
     OccasionDeleteApi,
@@ -16,6 +19,11 @@ occasions_urlpatterns = [
     path("<int:occasion_id>/delete/", OccasionDeleteApi.as_view(), name="delete"),
 ]
 
+collections_urlpatterns = [
+    path("", CollectionListApi.as_view(), name="list"),
+]
+
 urlpatterns = [
     path("occasions/", include((occasions_urlpatterns, "occasions"))),
+    path("collections/", include((collections_urlpatterns, "collections"))),
 ]
