@@ -14,6 +14,10 @@ from collection_project.money_collections.apis.occasions import (
     OccasionListApi,
     OccasionUpdateApi,
 )
+from collection_project.money_collections.apis.payments import (
+    PaymentCreateApi,
+    PaymentListApi,
+)
 
 occasions_urlpatterns = [
     path("", OccasionListApi.as_view(), name="list"),
@@ -31,7 +35,16 @@ collections_urlpatterns = [
     path("<int:collection_id>/delete/", CollectionDeleteApi.as_view(), name="delete"),
 ]
 
+payment_urlpatterns = [
+    path("", PaymentListApi.as_view(), name="list"),
+    path("create/", PaymentCreateApi.as_view(), name="create"),
+    # path("<int:payment_id>/", PaymentDetailApi.as_view(), name="detail"),
+    # path("<int:payment_id>/update/", PaymentUpdateApi.as_view(), name="update"),
+    # path("<int:payment_id>/delete/", PaymentDeleteApi.as_view(), name="delete"),
+]
+
 urlpatterns = [
     path("occasions/", include((occasions_urlpatterns, "occasions"))),
     path("collections/", include((collections_urlpatterns, "collections"))),
+    path("payments/", include((payment_urlpatterns, "payments"))),
 ]

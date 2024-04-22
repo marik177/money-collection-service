@@ -27,7 +27,7 @@ class OccasionAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("collection", "contributor", "amount", "payment_date")
+    list_display = ("id", "collection", "contributor", "amount", "payment_date")
     list_filter = ("collection", "contributor", "payment_date")
     search_fields = ("amount", "payment_date")
     date_hierarchy = "payment_date"
