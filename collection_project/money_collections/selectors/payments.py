@@ -7,5 +7,5 @@ def payments_list():
     return Payment.objects.select_related("collection", "contributor").all()
 
 
-def payment_get(payment_id):
+def get_payment(payment_id):
     return get_object_or_404(Payment.objects.select_related("collection", "contributor"), id=payment_id)

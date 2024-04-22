@@ -8,6 +8,7 @@ from collection_project.api.pagination import (
 )
 from collection_project.money_collections.models import Payment
 from collection_project.money_collections.selectors.payments import (
+    get_payment,
     payments_list,
 )
 from collection_project.money_collections.services.payments import (
@@ -66,3 +67,31 @@ class PaymentCreateApi(APIView):
         return Response(
             status=status.HTTP_201_CREATED,
         )
+
+
+class PaymentDetailApi(APIView):
+    """Retrieve a payment"""
+
+    class OutputSerializer(serializers.ModelSerializer):
+        contributor = serializers.SerializerMethodField()
+        collection = serializers.ReadOnlyField(source="collection.title")
+
+        class Meta:
+            model = Payment
+            fields = (
+                "id",
+                "contributor",
+                "amount",
+                "payment_date",
+                "collection",
+                "contributor",
+                "payment_date",
+            )
+
+        def get_contributor(self, obj: Payment) -> str:
+            return get_contributor_full_name_or_email(payment=obj)
+
+    def get(self, request, payment_id) -> Response:
+        payment = get_payment(payment_id=payment_id)
+        serializer = self.OutputSerializer(payment)
+        return Response(serializer.data)

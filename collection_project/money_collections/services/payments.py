@@ -10,7 +10,7 @@ from collection_project.users.models import BaseUser
 def get_contributor_full_name_or_email(*, payment: Payment) -> str:
     first_name = payment.contributor.first_name
     last_name = payment.contributor.last_name
-    if first_name and last_name:
+    if first_name or last_name:
         return f"{first_name} {last_name}"
     return payment.contributor.email
 
