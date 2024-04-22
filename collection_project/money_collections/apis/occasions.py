@@ -1,3 +1,7 @@
+from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -31,6 +35,8 @@ class OccasionListApi(APIView):
                 "name",
             )
 
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request) -> Response:
         occasions = get_occasions()
         return get_paginated_response(
@@ -54,6 +60,7 @@ class OccasionCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         ocassion_create(**serializer.validated_data)
+        cache.clear()
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -68,6 +75,8 @@ class OccasionDetailApi(APIView):
                 "name",
             )
 
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, occasion_id) -> Response:
         occasion = get_occasion(occasion_id=occasion_id)
         serializer = self.OutputSerializer(occasion)
@@ -89,6 +98,7 @@ class OccasionUpdateApi(ApiAuthMixin, APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         occasion_update(occasion=occasion, data=serializer.validated_data)
+        cache.clear()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -100,4 +110,5 @@ class OccasionDeleteApi(ApiAuthMixin, APIView):
     def delete(self, request, occasion_id) -> Response:
         occasion = get_occasion(occasion_id=occasion_id)
         occasion_delete(occasion=occasion)
+        cache.clear()
         return Response(status=status.HTTP_204_NO_CONTENT)

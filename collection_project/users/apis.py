@@ -1,3 +1,7 @@
+from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -25,6 +29,8 @@ class UserListApi(ApiAuthMixin, APIView):
             model = BaseUser
             fields = ("id", "email")
 
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request) -> Response:
         # Make sure the filters are valid, if passed
         filters_serializer = self.FilterSerializer(data=request.query_params)
@@ -51,10 +57,13 @@ class UserCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_create(**serializer.validated_data)
+        cache.clear()
         return Response(status=status.HTTP_201_CREATED)
 
 
 class UserDetailApi(ApiAuthMixin, APIView):
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, user_id) -> Response:
         user = get_user(user_id=user_id)
         return Response(user_get_login_data(user=user))
@@ -72,4 +81,5 @@ class UserUpdateApi(ApiAuthMixin, APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_update(user=user, data=serializer.validated_data)
+        cache.clear()
         return Response(status=status.HTTP_200_OK)

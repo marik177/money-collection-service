@@ -1,3 +1,7 @@
+from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -42,6 +46,8 @@ class CollectionListApi(APIView):
                 "end_collection_date",
             )
 
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request) -> Response:
         collections = collections_list()
         return get_paginated_response(
@@ -83,6 +89,8 @@ class CollectionDetailApi(APIView):
         def get_collected_amount(self, obj: Collection) -> int:
             return get_collected_amount(collection=obj)
 
+    @method_decorator(cache_page(60 * 15))  # Кэширование на 15 минут
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, collection_id) -> Response:
         collection = collection_get(collection_id)
         serializer = self.OutputSerializer(collection)
@@ -111,6 +119,7 @@ class CollectionCreateApi(ApiAuthMixin, APIView):
         serializer.is_valid(raise_exception=True)
         author = request.user
         collection_create(author=author, **serializer.validated_data)
+        cache.clear()
         return Response(status=status.HTTP_201_CREATED)
 
 

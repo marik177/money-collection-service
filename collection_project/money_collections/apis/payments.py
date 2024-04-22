@@ -1,3 +1,7 @@
+from django.core.cache import cache
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -39,6 +43,8 @@ class PaymentListApi(APIView):
         def get_contributor(self, obj: Payment) -> str:
             return get_contributor_full_name_or_email(payment=obj)
 
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request) -> Response:
         payments = payments_list()
         return get_paginated_response(
@@ -64,6 +70,7 @@ class PaymentCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         payment_create(**serializer.validated_data)
+        cache.clear()
         return Response(
             status=status.HTTP_201_CREATED,
         )
@@ -91,6 +98,8 @@ class PaymentDetailApi(APIView):
         def get_contributor(self, obj: Payment) -> str:
             return get_contributor_full_name_or_email(payment=obj)
 
+    @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, payment_id) -> Response:
         payment = get_payment(payment_id=payment_id)
         serializer = self.OutputSerializer(payment)
