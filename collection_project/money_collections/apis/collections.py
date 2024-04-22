@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,6 +10,9 @@ from collection_project.money_collections.models import Collection
 from collection_project.money_collections.selectors.collections import (
     collection_get,
     collections_list,
+)
+from collection_project.money_collections.services.collections import (
+    collection_create,
 )
 
 
@@ -66,3 +69,30 @@ class CollectionDetailApi(APIView):
         collection = collection_get(collection_id)
         serializer = self.OutputSerializer(collection)
         return Response(serializer.data)
+
+
+class CollectionCreateApi(APIView):
+    """Create a collection"""
+
+    class InputSerializer(serializers.ModelSerializer):
+        author = serializers.EmailField()
+        occasion = serializers.CharField()
+
+        class Meta:
+            model = Collection
+            fields = (
+                "title",
+                "author",
+                "occasion",
+                "description",
+                "planned_amount",
+                # "cover_image",
+                "end_collection_date",
+            )
+
+    def post(self, request) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
+        collection_create(**serializer.validated_data)
+        return Response(status=status.HTTP_201_CREATED)

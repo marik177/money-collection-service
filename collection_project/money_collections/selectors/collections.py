@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from collection_project.money_collections.models import Collection
 
 
@@ -6,4 +8,4 @@ def collections_list():
 
 
 def collection_get(collect_id):
-    return Collection.objects.select_related("author", "occasion").get(id=collect_id)
+    return get_object_or_404(Collection.objects.select_related("author", "occasion"), id=collect_id)
