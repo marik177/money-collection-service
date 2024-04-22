@@ -24,6 +24,7 @@ LOCAL_APPS = [
     "collection_project.core.apps.CoreConfig",
     "collection_project.authentication.apps.AuthenticationConfig",
     "collection_project.money_collections.apps.MoneyCollectionsConfig",
+    "collection_project.tasks.apps.TasksConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -165,6 +166,7 @@ APP_DOMAIN = env("APP_DOMAIN", default="http://localhost:8000")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+from config.settings.celery import *  # noqa
 from config.settings.jwt import *  # noqa
 from config.settings.cors import *  # noqa
 
