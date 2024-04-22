@@ -170,6 +170,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 from config.settings.celery import *  # noqa
 from config.settings.jwt import *  # noqa
 from config.settings.cors import *  # noqa
+from config.settings.email_sendings import *  # noqa
 
 INTERNAL_IPS = [
     "127.0.0.1",

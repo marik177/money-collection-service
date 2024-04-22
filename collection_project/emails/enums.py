@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class EmailSendingStrategy(Enum):
-    Local = "local"
+    LOCAL = "local"
     MAILTRAP = "mailtrap"
     BREVO = "brevo"
     SENDGRID = "sendgrid"
