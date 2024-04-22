@@ -25,6 +25,7 @@ LOCAL_APPS = [
     "collection_project.authentication.apps.AuthenticationConfig",
     "collection_project.money_collections.apps.MoneyCollectionsConfig",
     "collection_project.tasks.apps.TasksConfig",
+    "collection_project.emails.apps.EmailsConfig",
 ]
 
 THIRD_PARTY_APPS = [
