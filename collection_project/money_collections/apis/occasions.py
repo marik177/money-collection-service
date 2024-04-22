@@ -2,13 +2,19 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from collection_project.api.mixins import ApiAuthMixin
 from collection_project.api.pagination import (
     LimitOffsetPagination,
     get_paginated_response,
 )
+from collection_project.common.permissions import IsAdmin
 from collection_project.money_collections.models import Occasion
 from collection_project.money_collections.selectors.occasions import get_occasion, get_occasions
-from collection_project.money_collections.services.occasion import ocassion_create, occasion_delete, occasion_update
+from collection_project.money_collections.services.occasion import (
+    ocassion_create,
+    occasion_delete,
+    occasion_update,
+)
 
 
 class OccasionListApi(APIView):
@@ -71,6 +77,8 @@ class OccasionDetailApi(APIView):
 class OccasionUpdateApi(APIView):
     """Update an occasion"""
 
+    permission_classes = [IsAdmin]
+
     class InputSerializer(serializers.ModelSerializer):
         class Meta:
             model = Occasion
@@ -84,8 +92,10 @@ class OccasionUpdateApi(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class OccasionDeleteApi(APIView):
+class OccasionDeleteApi(ApiAuthMixin, APIView):
     """Delete an occasion"""
+
+    permission_classes = [IsAdmin]
 
     def delete(self, request, occasion_id) -> Response:
         occasion = get_occasion(occasion_id=occasion_id)
