@@ -8,3 +8,10 @@ class IsAdmin(BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.user.is_authenticated and request.user.is_admin)
+
+
+class IsAuthor(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_authenticated:
+            return request.user == obj.author
+        return False

@@ -2,11 +2,14 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from collection_project.api.mixins import ApiAuthMixin
+from collection_project.api.mixins import (
+    ApiAuthMixin,
+)
 from collection_project.api.pagination import (
     LimitOffsetPagination,
     get_paginated_response,
 )
+from collection_project.common.permissions import IsAdmin, IsAuthor
 from collection_project.money_collections.models import Collection
 from collection_project.money_collections.selectors.collections import (
     collection_get,
@@ -14,6 +17,8 @@ from collection_project.money_collections.selectors.collections import (
 )
 from collection_project.money_collections.services.collections import (
     collection_create,
+    collection_delete,
+    collection_update,
 )
 
 
@@ -95,3 +100,43 @@ class CollectionCreateApi(ApiAuthMixin, APIView):
         author = request.user
         collection_create(author=author, **serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)
+
+
+class CollectionUpdateApi(ApiAuthMixin, APIView):
+    """Update a collection"""
+
+    permission_classes = [IsAuthor]
+
+    class InputSerializer(serializers.ModelSerializer):
+        occasion = serializers.CharField()
+
+        class Meta:
+            model = Collection
+            fields = (
+                "title",
+                "occasion",
+                "description",
+                "planned_amount",
+                "cover_image",
+                "end_collection_date",
+            )
+
+    def put(self, request, collection_id) -> Response:
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        collection = collection_get(collection_id)
+        self.check_object_permissions(request, collection)
+        collection_update(collection=collection, data=serializer.validated_data)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class CollectionDeleteApi(ApiAuthMixin, APIView):
+    """Delete a collection"""
+
+    permission_classes = [IsAdmin]
+
+    def delete(self, request, collection_id) -> Response:
+        collection = collection_get(collection_id)
+        collection_delete(collection=collection)
+        return Response(status=status.HTTP_204_NO_CONTENT)

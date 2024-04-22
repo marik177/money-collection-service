@@ -6,6 +6,7 @@ from .models import Collection, Occasion, Payment
 @admin.register(Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "author",
         "occasion",

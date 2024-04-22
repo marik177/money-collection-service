@@ -1,6 +1,9 @@
 import sys
 from datetime import datetime, timedelta
 
+from django.db import transaction
+
+from collection_project.common.services import model_update
 from collection_project.money_collections.models import (
     Collection,
     Occasion,
@@ -29,4 +32,19 @@ def collection_create(
         cover_image=cover_image,
         end_collection_date=end_collection_date,
     )
+    return collection
+
+
+@transaction.atomic
+def collection_update(*, collection: Collection, data) -> Collection:
+    """Update a collection"""
+    fields = ["title", "description", "planned_amount", "cover_image", "end_collection_date"]
+    collection, has_updated = model_update(instance=collection, fields=fields, data=data)
+
+    return collection
+
+
+def collection_delete(*, collection: Collection):
+    """Delete a collection"""
+    collection.delete()
     return collection
