@@ -2,6 +2,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from collection_project.api.mixins import ApiAuthMixin
 from collection_project.api.pagination import (
     LimitOffsetPagination,
     get_paginated_response,
@@ -71,18 +72,16 @@ class CollectionDetailApi(APIView):
         return Response(serializer.data)
 
 
-class CollectionCreateApi(APIView):
+class CollectionCreateApi(ApiAuthMixin, APIView):
     """Create a collection"""
 
     class InputSerializer(serializers.ModelSerializer):
-        author = serializers.EmailField()
         occasion = serializers.CharField()
 
         class Meta:
             model = Collection
             fields = (
                 "title",
-                "author",
                 "occasion",
                 "description",
                 "planned_amount",
@@ -93,5 +92,6 @@ class CollectionCreateApi(APIView):
     def post(self, request) -> Response:
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        collection_create(**serializer.validated_data)
+        author = request.user
+        collection_create(author=author, **serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)

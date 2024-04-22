@@ -74,7 +74,7 @@ class OccasionDetailApi(APIView):
         return Response(serializer.data)
 
 
-class OccasionUpdateApi(APIView):
+class OccasionUpdateApi(ApiAuthMixin, APIView):
     """Update an occasion"""
 
     permission_classes = [IsAdmin]
