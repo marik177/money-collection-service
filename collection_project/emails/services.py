@@ -38,3 +38,9 @@ def email_send(email: Email) -> Email:
         instance=email, fields=["status", "sent_at"], data={"status": Email.Status.SENT, "sent_at": timezone.now()}
     )
     return email
+
+
+@transaction.atomic
+def update_email_status(email: Email, status: str) -> Email:
+    email, has_updated = model_update(instance=email, fields=["status"], data={"status": status})
+    return email

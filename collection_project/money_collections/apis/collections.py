@@ -89,7 +89,7 @@ class CollectionDetailApi(APIView):
         def get_collected_amount(self, obj: Collection) -> int:
             return get_collected_amount(collection=obj)
 
-    @method_decorator(cache_page(60 * 15))  # Кэширование на 15 минут
+    @method_decorator(cache_page(60 * 15))
     @method_decorator(vary_on_headers("Authorization"))
     def get(self, request, collection_id) -> Response:
         collection = collection_get(collection_id)
