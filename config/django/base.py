@@ -41,9 +41,6 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS = [
     "django.contrib.admin",
-    # If you want to have required 2FA for the Django admin
-    # Uncomment the line below and comment out the default admin
-    # "styleguide_example.custom_admin.apps.CustomAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -94,7 +91,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="sqlite:///proninteam_example_db.db"),
+    "default": env.db("DATABASE_URL", default="sqlite:///proninteam_fake_db.db"),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
