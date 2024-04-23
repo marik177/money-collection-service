@@ -72,8 +72,10 @@ def collection_delete(*, collection: Collection) -> Collection:
 
 
 def get_contributors_number(collection: Collection) -> int:
+    """Get number of contributors"""
     return len(set(collection.payments.values_list("contributor_id", flat=True)))
 
 
 def get_collected_amount(collection: Collection) -> int:
+    """Get collected amount"""
     return collection.payments.aggregate(full_amount=Sum("amount"))["full_amount"] or 0

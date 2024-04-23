@@ -10,6 +10,7 @@ from collection_project.emails.models import Email
 
 @transaction.atomic
 def email_failed(email: Email) -> Email:
+    """Mark an email as failed"""
     if email.status != Email.Status.SENDING:
         raise ApplicationError(f"Cannot mark as failed non-sending emails. Current status is {email.status}")
 
@@ -19,6 +20,7 @@ def email_failed(email: Email) -> Email:
 
 @transaction.atomic
 def email_send(email: Email) -> Email:
+    """Send an email"""
     if email.status != Email.Status.SENDING:
         raise ApplicationError(f"Cannot send non-ready to send emails. Current status is {email.status}")
 
@@ -42,5 +44,6 @@ def email_send(email: Email) -> Email:
 
 @transaction.atomic
 def update_email_status(email: Email, status: str) -> Email:
+    """Update an email status"""
     email, has_updated = model_update(instance=email, fields=["status"], data={"status": status})
     return email
