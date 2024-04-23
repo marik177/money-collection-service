@@ -92,7 +92,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="sqlite:///proninteam_fake_db.db"),
+    "default": env.db("DATABASE_URL", default="sqlite:///proninteam_example_db.db"),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
